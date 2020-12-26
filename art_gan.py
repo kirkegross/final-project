@@ -85,22 +85,22 @@ def save_images(cnt, noise):
         PREVIEW_MARGIN + (PREVIEW_ROWS * (IMAGE_SIZE + PREVIEW_MARGIN)),
         PREVIEW_MARGIN + (PREVIEW_COLS * (IMAGE_SIZE + PREVIEW_MARGIN)), 3),
         255, dtype=np.uint8)
-generated_images = generator.predict(noise)
-generated_images = 0.5 * generated_images + 0.5
-image_count = 0
-for row in range(PREVIEW_ROWS):
-    for col in range(PREVIEW_COLS):
-        r = row * (IMAGE_SIZE + PREVIEW_MARGIN) + PREVIEW_MARGIN
-        c = col * (IMAGE_SIZE + PREVIEW_MARGIN) + PREVIEW_MARGIN
-        image_array[r:r + IMAGE_SIZE, c:c +
-                    IMAGE_SIZE] = generated_images[image_count] * 255
-        image_count += 1
-output_path = 'output'
-if not os.path.exists(output_path):
-    os.makedirs(output_path)
-filename = os.path.join(output_path, f"trained-{cnt}.jpg")
-im = Image.fromarray(image_array)
-im.save(filename)
+    generated_images = generator.predict(noise)
+    generated_images = 0.5 * generated_images + 0.5
+    image_count = 0
+    for row in range(PREVIEW_ROWS):
+        for col in range(PREVIEW_COLS):
+            r = row * (IMAGE_SIZE + PREVIEW_MARGIN) + PREVIEW_MARGIN
+            c = col * (IMAGE_SIZE + PREVIEW_MARGIN) + PREVIEW_MARGIN
+            image_array[r:r + IMAGE_SIZE, c:c +
+                        IMAGE_SIZE] = generated_images[image_count] * 255
+            image_count += 1
+    output_path = 'output'
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    filename = os.path.join(output_path, f"trained-{cnt}.jpg")
+    im = Image.fromarray(image_array)
+    im.save(filename)
     
     
 image_shape = (IMAGE_SIZE, IMAGE_SIZE, IMAGE_CHANNELS)
@@ -173,7 +173,7 @@ for epoch in range(EPOCHS):
  
   discriminator_metric = 0.5 * np.add(discriminator_metric_real,   discriminator_metric_generated)
 
-  generator_metric = combined.train_on_batch(noisse, y_real)
+  generator_metric = combined.train_on_batch(noise, y_real)
   if epoch % SAVE_FREQ == 0:
      save_images(cnt, fixed_noise)
      cnt += 1
